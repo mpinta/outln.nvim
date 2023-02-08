@@ -2,7 +2,7 @@ local M = {}
 
 -- Defines default configuration options.
 local defaults = {
-	after = "normal zt"
+    after = "normal zt"
 }
 
 M.options = defaults
@@ -76,9 +76,9 @@ end
 
 -- Sets user configured options.
 function M.setup(options)
-	if options ~= nil and next(options) ~= nil then
-		M.options = options
-	end
+    if options ~= nil and next(options) ~= nil then
+        M.options = options
+    end
 end
 
 -- Opens and populates an Outln window.
@@ -96,7 +96,7 @@ function M.open_outln()
      }, function(selected)
         if selected ~= nil then
             vim.cmd(":" .. m[selected])
-			vim.cmd(M.options.after)
+            vim.cmd(M.options.after)
         end
      end)
 end
