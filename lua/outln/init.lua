@@ -1,7 +1,7 @@
-local hello = require('outln.hello')
+local outln = require('outln.outln')
 
 local M = {}
 
-M.say_hello = hello.say_hello
+M.open_outln = outln.open_outln
 
 return M
