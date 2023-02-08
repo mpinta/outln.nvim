@@ -1,5 +1,12 @@
 local M = {}
 
+-- Defines default configuration options.
+local defaults = {
+	after = "normal zt"
+}
+
+M.options = defaults
+
 -- Defines languages, that are supported.
 local supported_languages = {
     ["go"] = "go"
@@ -67,6 +74,13 @@ local function get_methods_and_functions(lang)
     return get_query_captures(lang, query)
 end
 
+-- Sets user configured options.
+function M.setup(options)
+	if options ~= nil and next(options) ~= nil then
+		M.options = options
+	end
+end
+
 -- Opens and populates an Outln window.
 function M.open_outln()
     local lang = get_language()
@@ -82,7 +96,7 @@ function M.open_outln()
      }, function(selected)
         if selected ~= nil then
             vim.cmd(":" .. m[selected])
-            vim.cmd("normal zt")
+			vim.cmd(M.options.after)
         end
      end)
 end
