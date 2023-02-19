@@ -6,7 +6,7 @@ The plugin provides an interface to easily and quickly jump to a method or funct
 
 ## Install
 Using the **packer** plugin manager:
-```
+```lua
 use {
     'mpinta/outln.nvim',
     requires = {
@@ -24,7 +24,7 @@ Visit the [dressing.nvim](https://github.com/stevearc/dressing.nvim)'s repositor
 
 ## Configuration
 The plugin can be used without any specific setup. However, it provides some configuration options, with the following defaults, that can be overridden.
-```
+```lua
 local outln = require('outln')
 
 outln.setup({
