@@ -48,7 +48,7 @@ local function get_query_captures(lang, query)
         get_root_node(lang),
         bufnr
     ) do
-        local name = vim.treesitter.query.get_node_text(
+        local name = vim.treesitter.get_node_text(
             captures[1],
             bufnr
         )
@@ -62,7 +62,7 @@ end
 
 -- Gets tree's method and function names and their positions.
 local function get_methods_and_functions(lang)
-    local query = vim.treesitter.parse_query(lang, [[
+    local query = vim.treesitter.query.parse(lang, [[
         (method_declaration
             name: (field_identifier) @annotation (#offset! @annotation)
         )
