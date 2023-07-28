@@ -9,7 +9,26 @@ M.options = defaults
 
 -- Defines languages, that are supported.
 local supported_languages = {
-    ["go"] = "go"
+    ["go"] = "go";
+    ["yml"] = "yaml";
+    ["yaml"] = "yaml";
+}
+
+-- Defines language-specific queries.
+local queries = {
+    ["go"] = [[
+        (method_declaration
+            name: (field_identifier) @annotation (#offset! @annotation)
+        )
+        (function_declaration
+            name: (identifier) @annotation (#offset! @annotation)
+        )
+    ]];
+    ["yaml"] = [[
+        (block_mapping_pair
+            key: (flow_node) @annotation (#offset! @annotation)
+        )
+    ]];
 }
 
 -- Gets current file's language.
@@ -60,18 +79,34 @@ local function get_query_captures(lang, query)
     return n, m
 end
 
--- Gets tree's method and function names and their positions.
-local function get_methods_and_functions(lang)
-    local query = vim.treesitter.query.parse(lang, [[
-        (method_declaration
-            name: (field_identifier) @annotation (#offset! @annotation)
-        )
-        (function_declaration
-            name: (identifier) @annotation (#offset! @annotation)
-        )
-    ]])
+-- Cleans YAML query captures.
+local function clean_yaml_captures(n, m)
+    local n_clean, m_clean = {}, {}
 
-    return get_query_captures(lang, query)
+    for _, v in pairs(n) do
+        if v:sub(1, 1) == "/" then
+            table.insert(n_clean, v)
+            m_clean[v] = m[v]
+        end
+    end
+
+    return n_clean, m_clean
+end
+
+-- Gets names and their metadata.
+local function get_names_and_metadata(lang)
+    local query = vim.treesitter.query.parse(
+        lang,
+        queries[lang]
+    )
+
+    local n, m = get_query_captures(lang, query)
+
+    if lang == "yaml" then
+        n, m = clean_yaml_captures(n, m)
+    end
+
+    return n, m
 end
 
 -- Sets user configured options.
@@ -89,16 +124,17 @@ function M.open_outln()
         error("Language is not supported.")
     end
 
-    local n, m = get_methods_and_functions(lang)
+    local n, m = get_names_and_metadata(lang)
 
     vim.ui.select(n, {
-        prompt = "Find Methods or Functions",
+        prompt = "Outln Results",
      }, function(selected)
         if selected ~= nil then
             vim.cmd(":" .. m[selected])
+            vim.cmd("norm! _")
             vim.cmd(M.options.after)
         end
-     end)
+    end)
 end
 
 return M
