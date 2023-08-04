@@ -41,3 +41,4 @@ Use the `:Outln` command to open the plugin interface.
 Currently supported languages are:
 * Go
 * YAML
+* Python

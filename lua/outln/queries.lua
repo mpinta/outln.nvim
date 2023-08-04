@@ -15,6 +15,11 @@ M.queries = {
             key: (flow_node) @annotation (#offset! @annotation)
         )
     ]];
+    ["python"] = [[
+        (function_definition
+            name: (identifier) @annotation (#offset! @annotation)
+        )
+    ]];
 }
 
 return M

@@ -16,6 +16,7 @@ local supported_languages = {
     ["go"] = "go";
     ["yml"] = "yaml";
     ["yaml"] = "yaml";
+    ["py"] = "python";
 }
 
 -- Gets current file's language.
