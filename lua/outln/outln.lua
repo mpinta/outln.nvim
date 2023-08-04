@@ -1,3 +1,7 @@
+local utils = require("outln.utils")
+local querier = require("outln.querier")
+local queries = require("outln.queries")
+
 local M = {}
 
 -- Defines default configuration options.
@@ -12,23 +16,6 @@ local supported_languages = {
     ["go"] = "go";
     ["yml"] = "yaml";
     ["yaml"] = "yaml";
-}
-
--- Defines language-specific queries.
-local queries = {
-    ["go"] = [[
-        (method_declaration
-            name: (field_identifier) @annotation (#offset! @annotation)
-        )
-        (function_declaration
-            name: (identifier) @annotation (#offset! @annotation)
-        )
-    ]];
-    ["yaml"] = [[
-        (block_mapping_pair
-            key: (flow_node) @annotation (#offset! @annotation)
-        )
-    ]];
 }
 
 -- Gets current file's language.
@@ -47,63 +34,15 @@ local function get_language()
     return lang
 end
 
--- Gets tree's root node using Treesitter.
-local function get_root_node(lang)
-    local bufnr = vim.api.nvim_get_current_buf()
-
-    local language_tree = vim.treesitter.get_parser(bufnr, lang)
-    local syntax_tree = language_tree:parse()
-
-    return syntax_tree[1]:root()
-end
-
--- Gets given query's captures and their metadata.
-local function get_query_captures(lang, query)
-    local bufnr = vim.api.nvim_get_current_buf()
-
-    local n, m = {}, {}
-
-    for _, captures, metadata in query:iter_matches(
-        get_root_node(lang),
-        bufnr
-    ) do
-        local name = vim.treesitter.get_node_text(
-            captures[1],
-            bufnr
-        )
-
-        table.insert(n, name)
-        m[name] = metadata[1]["range"][1]+1
-    end
-
-    return n, m
-end
-
--- Cleans YAML query captures.
-local function clean_yaml_captures(n, m)
-    local n_clean, m_clean = {}, {}
-
-    for _, v in pairs(n) do
-        if v:sub(1, 1) == "/" then
-            table.insert(n_clean, v)
-            m_clean[v] = m[v]
-        end
-    end
-
-    return n_clean, m_clean
-end
-
--- Gets names and their metadata.
+-- Gets node names and their metadata.
 local function get_names_and_metadata(lang)
-    local query = vim.treesitter.query.parse(
+    local n, m = querier.get_query_captures(
         lang,
-        queries[lang]
+        queries.queries[lang]
     )
 
-    local n, m = get_query_captures(lang, query)
-
     if lang == "yaml" then
-        n, m = clean_yaml_captures(n, m)
+        return utils.clean_yaml_captures(n, m)
     end
 
     return n, m
