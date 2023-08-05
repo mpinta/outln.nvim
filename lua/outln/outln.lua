@@ -1,22 +1,33 @@
-local utils = require("outln.utils")
-local querier = require("outln.querier")
-local queries = require("outln.queries")
+local handler = require("outln.handler")
 
 local M = {}
 
 -- Defines default configuration options.
 local defaults = {
-    after = "normal zt"
+    after = "normal zt",
+    go = {
+        methods = true,
+        functions = true,
+        structs = true,
+        interfaces = true
+    },
+    openapi = {
+        endpoints = true
+    },
+    python = {
+        functions = true,
+        classes = true
+    }
 }
 
 M.options = defaults
 
 -- Defines languages, that are supported.
 local supported_languages = {
-    ["go"] = "go";
-    ["yml"] = "yaml";
-    ["yaml"] = "yaml";
-    ["py"] = "python";
+    go = "go",
+    yml = "yaml",
+    yaml = "yaml",
+    py = "python"
 }
 
 -- Gets current file's language.
@@ -37,22 +48,25 @@ end
 
 -- Gets node names and their metadata.
 local function get_names_and_metadata(lang)
-    local n, m = querier.get_query_captures(
-        lang,
-        queries.queries[lang]
-    )
+    local lang_type = lang
 
     if lang == "yaml" then
-        return utils.clean_yaml_captures(n, m)
+        lang_type = "openapi"
     end
 
-    return n, m
+    return handler.handle(
+        lang,
+        lang_type,
+        M.options[lang_type]
+    )
 end
 
 -- Sets user configured options.
 function M.setup(options)
     if options ~= nil and next(options) ~= nil then
-        M.options = options
+        for k, v in pairs(options) do
+            M.options[k] = v
+        end
     end
 end
 

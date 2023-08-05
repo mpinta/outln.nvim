@@ -1,7 +1,7 @@
 local M = {}
 
--- Cleans YAML query captures.
-function M.clean_yaml_captures(n, m)
+-- Cleans OpenAPI query captures.
+function M.clean_openapi_captures(n, m)
     local n_clean, m_clean = {}, {}
 
     for _, v in pairs(n) do
