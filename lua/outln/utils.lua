@@ -1,17 +1,20 @@
 local M = {}
 
 -- Cleans OpenAPI query captures.
-function M.clean_openapi_captures(n, m)
-    local n_clean, m_clean = {}, {}
+function M.clean_openapi_query_captures(qc)
+    local qc_clean = {}
 
-    for _, v in pairs(n) do
-        if v:sub(1, 1) == "/" then
-            table.insert(n_clean, v)
-            m_clean[v] = m[v]
+    for k, v in pairs(qc) do
+        qc_clean[k] = {}
+
+        for _, j in pairs(v) do
+            if j[1]:sub(1, 1) == "/" then
+                table.insert(qc_clean[k], j)
+            end
         end
     end
 
-    return n_clean, m_clean
+    return qc_clean
 end
 
 return M

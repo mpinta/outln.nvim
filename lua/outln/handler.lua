@@ -6,28 +6,26 @@ local M = {}
 
 -- Handles getting language-specific query captures.
 function M.handle(lang, lang_type, options)
-    local query = ""
+    local qc = {}
 
     for k, v in pairs(options) do
         if v == true then
-            local q = queries[lang_type][k]
+            local query = queries[lang_type][k]
 
-            if q ~= nil then
-                query = query .. q
+            if query ~= nil then
+                qc[k] = querier.get_query_captures(
+                    lang,
+                    query
+                )
             end
         end
     end
 
-    local n, m = querier.get_query_captures(
-        lang,
-        query
-    )
-
     if lang_type == "openapi" then
-        n, m = utils.clean_openapi_captures(n, m)
+        qc = utils.clean_openapi_query_captures(qc)
     end
 
-    return n, m
+    return qc
 end
 
 return M

@@ -2,6 +2,16 @@ local handler = require("outln.handler")
 
 local M = {}
 
+-- Defines definitions of all supported languages.
+local definitions = {
+    "interfaces",
+    "structs",
+    "classes",
+    "functions",
+    "methods",
+    "endpoints"
+}
+
 -- Defines default configuration options.
 local defaults = {
     after = "normal zt",
@@ -46,19 +56,40 @@ local function get_language()
     return lang
 end
 
--- Gets node names and their metadata.
-local function get_names_and_metadata(lang)
+-- Gets captures of language-specific definitions.
+local function get_captures(lang)
     local lang_type = lang
 
     if lang == "yaml" then
         lang_type = "openapi"
     end
 
-    return handler.handle(
+    local c = handler.handle(
         lang,
         lang_type,
         M.options[lang_type]
     )
+
+    return c
+end
+
+-- Gets names and metadata from captures.
+local function get_names_and_metadata(c)
+    local n, m = {}, {}
+
+    for _, v in pairs(definitions) do
+        if c[v] ~= nil and #c[v] ~= 0 then
+            for _, j in pairs(c[v]) do
+                local name = j[1]
+                local line = j[2]
+
+                table.insert(n, name)
+                m[name] = line
+            end
+        end
+    end
+
+    return n, m
 end
 
 -- Sets user configured options.
@@ -78,7 +109,8 @@ function M.open_outln()
         error("Language is not supported.")
     end
 
-    local n, m = get_names_and_metadata(lang)
+    local c = get_captures(lang)
+    local n, m = get_names_and_metadata(c)
 
     vim.ui.select(n, {
         prompt = "Outln Results",
