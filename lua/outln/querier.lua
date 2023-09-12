@@ -18,15 +18,6 @@ local function parse_query(lang, query)
     )
 end
 
--- Sorts query captures based on line numbers.
-local function sort_query_captures(qc)
-    table.sort(qc, function(a, b)
-        return a[2] < b[2]
-    end)
-
-    return qc
-end
-
 -- Gets given query's captures and their metadata.
 function M.get_query_captures(lang, query)
     local bufnr = vim.api.nvim_get_current_buf()
@@ -42,7 +33,6 @@ function M.get_query_captures(lang, query)
             captures[1],
             bufnr
         )
-
         local line = metadata[1]["range"][1]+1
 
         table.insert(qc, {
@@ -50,8 +40,6 @@ function M.get_query_captures(lang, query)
             line
         })
     end
-
-    qc = sort_query_captures(qc)
 
     return qc
 end

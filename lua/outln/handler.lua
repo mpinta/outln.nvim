@@ -17,6 +17,8 @@ function M.handle(lang, lang_type, options)
                     lang,
                     query
                 )
+
+                qc[k] = utils.sort_query_captures(qc[k])
             end
         end
     end

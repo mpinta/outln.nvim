@@ -1,16 +1,7 @@
 local handler = require("outln.handler")
+local preparer = require("outln.preparer")
 
 local M = {}
-
--- Defines definitions of all supported languages.
-local definitions = {
-    "interfaces",
-    "structs",
-    "classes",
-    "functions",
-    "methods",
-    "endpoints"
-}
 
 -- Defines default configuration options.
 local defaults = {
@@ -73,22 +64,9 @@ local function get_captures(lang)
     return c
 end
 
--- Gets names and metadata from captures.
-local function get_names_and_metadata(c)
-    local n, m = {}, {}
-
-    for _, v in pairs(definitions) do
-        if c[v] ~= nil and #c[v] ~= 0 then
-            for _, j in pairs(c[v]) do
-                local name = j[1]
-                local line = j[2]
-
-                table.insert(n, name)
-                m[name] = line
-            end
-        end
-    end
-
+-- Prepares captures for display on UI.
+local function prepare_captures(c)
+    local n, m = preparer.prepare(c)
     return n, m
 end
 
@@ -110,7 +88,7 @@ function M.open_outln()
     end
 
     local c = get_captures(lang)
-    local n, m = get_names_and_metadata(c)
+    local n, m = prepare_captures(c)
 
     vim.ui.select(n, {
         prompt = "Outln Results",

@@ -17,4 +17,13 @@ function M.clean_openapi_query_captures(qc)
     return qc_clean
 end
 
+-- Sorts query captures based on line numbers.
+function M.sort_query_captures(qc)
+    table.sort(qc, function(a, b)
+        return a[2] < b[2]
+    end)
+
+    return qc
+end
+
 return M
