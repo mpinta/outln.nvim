@@ -45,23 +45,30 @@ outln.setup({
 })
 ```
 
-* `after` option provides setting the command that will be run after jumping to the selected definition.
-* `go` option represents settings for the Go language.
-    * `methods` option enables searching for method definitions.
-    * `functions` option enables searching for function definitions.
-    * `structs` option enables searching for struct definitions.
-    * `interfaces` option enables searching for interface definitions.
-* `openapi` option represents settings for the OpenAPI language.
-    * `endpoints` option enables searching for endpoint definitions.
-* `python` option represents settings for the Python language.
-    * `functions` option enables searching for function definitions.
-    * `classes` option enables searching for class definitions.
+### Options
+**Basic** options:
+| Option | Description |
+|---|---|
+| `after` | The command that will be run after jumping to the selected definition. |
+| `go` | Represents settings for the Go language. |
+| `openapi` | Represents settings for the OpenAPI language. |
+| `python` | Represents settings for the Python language. |
+
+**Language-specific** options:
+| Option | Description | Language support |
+|---|---|---|
+| `methods` | Enables searching for method definitions. | `go` |
+| `functions` | Enables searching for function definitions. | `go`, `python` |
+| `structs` | Enables searching for struct definitions. | `go` |
+| `interfaces` | Enables searching for interface definitions. | `go` |
+| `endpoints` | Enables searching for endpoint definitions. | `openapi` |
+| `classes` | Enables searching for class definitions. | `python` |
 
 ### Commands
 Use the `:Outln` command to open the plugin interface.
 
 ## Language support
-Currently supported languages are:
+Supported languages are:
 * Go
 * OpenAPI
 * Python
