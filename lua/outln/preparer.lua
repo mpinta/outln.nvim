@@ -9,28 +9,26 @@ local definitions = {
     "classes",
     "functions",
     "methods",
-    "endpoints"
+    "endpoints",
+    "components"
 }
 
--- Prepares names and metadata of captures.
-function M.prepare(c)
-    local n, m = {}, {}
+-- Prepares names and metadata of query captures.
+function M.prepare(qc)
+    local names, metadata = {}, {}
 
-    for _, v in pairs(definitions) do
-        if c[v] ~= nil and #c[v] ~= 0 then
-            for _, j in pairs(c[v]) do
-                local name = j[1]
-                local line = j[2]
+    for _, definition in pairs(definitions) do
+        if qc[definition] ~= nil then
+            for line, name in pairs(qc[definition]) do
+                local new_name = icons[definition] .. " " .. name[1]
 
-                name = icons[v] .. " " .. name
-
-                table.insert(n, name)
-                m[name] = line
+                table.insert(names, new_name)
+                metadata[new_name] = line
             end
         end
     end
 
-    return n, m
+    return names, metadata
 end
 
 return M

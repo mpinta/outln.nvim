@@ -18,4 +18,7 @@ M.methods = "󰫺"
 -- Defines icon for endpoint definition.
 M.endpoints = ""
 
+-- Defines icon for component definition.
+M.components = ""
+
 return M

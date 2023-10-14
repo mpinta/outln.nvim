@@ -1,7 +1,7 @@
 # outln.nvim
 An outline plugin for Neovim, kinda.
 
-## What and why?
+## What and how?
 Plugin provides an interface to easily and quickly jump to a language-specific definition within an open file. Under the hood it uses [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) to find the necessary nodes and [dressing.nvim](https://github.com/stevearc/dressing.nvim) to provide the UI.
 
 ## Install
@@ -36,7 +36,8 @@ outln.setup({
         interfaces = true
     },
     openapi = {
-        endpoints = true
+        endpoints = true,
+        components = true
     },
     python = {
         functions = true,
@@ -62,6 +63,7 @@ outln.setup({
 | `structs` | Enables searching for struct definitions. | `go` |
 | `interfaces` | Enables searching for interface definitions. | `go` |
 | `endpoints` | Enables searching for endpoint definitions. | `openapi` |
+| `components` | Enables searching for component definitions. | `openapi` |
 | `classes` | Enables searching for class definitions. | `python` |
 
 ### Commands

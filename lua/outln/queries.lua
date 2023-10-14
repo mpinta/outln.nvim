@@ -36,6 +36,11 @@ M.openapi = {
         (block_mapping_pair
             key: (flow_node) @annotation (#offset! @annotation)
         )
+    ]],
+    components = [[
+        (block_mapping_pair
+            key: (flow_node) @annotation (#offset! @annotation)
+        )
     ]]
 }
 

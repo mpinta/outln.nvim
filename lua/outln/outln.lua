@@ -13,7 +13,8 @@ local defaults = {
         interfaces = true
     },
     openapi = {
-        endpoints = true
+        endpoints = true,
+        components = true
     },
     python = {
         functions = true,
@@ -55,19 +56,22 @@ local function get_captures(lang)
         lang_type = "openapi"
     end
 
-    local c = handler.handle(
+    local captures = handler.handle(
         lang,
         lang_type,
         M.options[lang_type]
     )
 
-    return c
+    return captures
 end
 
 -- Prepares captures for display on UI.
-local function prepare_captures(c)
-    local n, m = preparer.prepare(c)
-    return n, m
+local function prepare_captures(captures)
+    local names, metadata = preparer.prepare(
+        captures
+    )
+
+    return names, metadata
 end
 
 -- Sets user configured options.
@@ -87,14 +91,17 @@ function M.open_outln()
         error("Language is not supported.")
     end
 
-    local c = get_captures(lang)
-    local n, m = prepare_captures(c)
+    local captures = get_captures(lang)
 
-    vim.ui.select(n, {
+    local names, metadata = prepare_captures(
+        captures
+    )
+
+    vim.ui.select(names, {
         prompt = "Outln Results",
      }, function(selected)
         if selected ~= nil then
-            vim.cmd(":" .. m[selected])
+            vim.cmd(":" .. metadata[selected])
             vim.cmd("norm! _")
             vim.cmd(M.options.after)
         end

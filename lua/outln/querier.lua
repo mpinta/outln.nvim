@@ -21,11 +21,11 @@ end
 -- Gets given query's captures and their metadata.
 function M.get_query_captures(lang, query)
     local bufnr = vim.api.nvim_get_current_buf()
-    local queryp = parse_query(lang, query)
+    local parsed_query = parse_query(lang, query)
 
     local qc = {}
 
-    for _, captures, metadata in queryp:iter_matches(
+    for _, captures, metadata in parsed_query:iter_matches(
         get_root_node(lang),
         bufnr
     ) do
