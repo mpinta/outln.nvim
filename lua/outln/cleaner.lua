@@ -11,12 +11,10 @@ local function clean_endpoints(qc)
         local line = capture[2]
 
         if name:sub(1, 1) == "/" then
-            qc_clean[line] = {}
-
-            table.insert(
-                qc_clean[line],
-                name
-            )
+            table.insert(qc_clean, {
+                name,
+                line
+            })
         end
     end
 
@@ -34,12 +32,10 @@ local function clean_components(qc)
         local char = name:sub(1, 1)
 
         if utils.is_alphabetical(char) and utils.is_uppercase(char) then
-            qc_clean[line] = {}
-
-            table.insert(
-                qc_clean[line],
-                name
-            )
+            table.insert(qc_clean, {
+                name,
+                line
+            })
         end
     end
 
